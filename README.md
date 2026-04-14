@@ -1,6 +1,6 @@
 # AI Medical First Aid Assistant (CrewAI)
 
-An agentic AI assistant built with CrewAI and Streamlit designed to provide immediate, general first aid guidance. It uses an orchestrated pipeline of specialized AI agents to triage symptoms, fetch first aid protocols from a customized Pinecone vector database, and verify those protocols against trusted medical authorities (Mayo Clinic, Red Cross, CDC) before generating a calm and actionable response.
+An agentic AI assistant built with CrewAI and Streamlit designed to provide immediate, general first aid guidance. It uses an orchestrated pipeline of specialized AI agents to triage symptoms, fetch first aid protocols from a customized Pinecone vector database and generates a calm and actionable response.
 
 ## Architecture
 
