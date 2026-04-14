@@ -23,6 +23,9 @@ class StreamCapture:
     def flush(self):
         pass
 
+    def isatty(self):
+        return False
+
 st.title("🚑 AI Medical First Aid Assistant")
 st.markdown(
     "Enter a medical situation or symptom description in plain English. This assistant will help you:\n"
