@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 import re
+import io
 from dotenv import load_dotenv
 from crew import medical_first_aid_crew
 
@@ -8,26 +9,25 @@ load_dotenv()
 
 st.set_page_config(page_title="AI Medical First Aid Assistant", page_icon="🚑", layout="wide")
 
-class StreamCapture:
+class StreamCapture(io.StringIO):
     def __init__(self, st_placeholder):
+        super().__init__()
         self.st_placeholder = st_placeholder
-        self.buffer = ""
+        self.buffer_text = ""
         # Regex to strip out ANSI terminal color codes so they don't show up as garbage text
         self.ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
 
     def write(self, text):
         clean_text = self.ansi_escape.sub('', text)
-        self.buffer += clean_text
+        self.buffer_text += clean_text
         
         # Strip trailing spaces and right-edge characters (│, ╮, ╯) for cleaner UI
         display_lines = []
-        for line in self.buffer.split('\n'):
+        for line in self.buffer_text.split('\n'):
             display_lines.append(line.rstrip(' │╮╯\r'))
             
         self.st_placeholder.text('\n'.join(display_lines))
-
-    def flush(self):
-        pass
+        return len(text)
 
     def isatty(self):
         return False
