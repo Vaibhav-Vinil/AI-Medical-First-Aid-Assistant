@@ -36,12 +36,13 @@ class StreamCapture(io.StringIO):
         self.buffer_text += new_text
         
         # Strip trailing spaces and right-edge characters (│, ╮, ╯) for cleaner UI
-        display_lines = []
-        for line in self.buffer_text.split('\n'):
-            if line.strip(): # Optional: prevent huge vertical gaps
-                display_lines.append(line.rstrip(' │╮╯\r'))
-            
-        self.st_placeholder.text('\n'.join(display_lines))
+        if new_text:
+            display_lines = []
+            for line in self.buffer_text.split('\n'):
+                if line.strip(): # Optional: prevent huge vertical gaps
+                    display_lines.append(line.rstrip(' │╮╯\r'))
+                
+            self.st_placeholder.text('\n'.join(display_lines))
         return len(text)
 
     def isatty(self):
