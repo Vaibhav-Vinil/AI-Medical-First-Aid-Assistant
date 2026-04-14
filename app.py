@@ -18,7 +18,13 @@ class StreamCapture:
     def write(self, text):
         clean_text = self.ansi_escape.sub('', text)
         self.buffer += clean_text
-        self.st_placeholder.text(self.buffer)
+        
+        # Strip trailing spaces and right-edge characters (│, ╮, ╯) for cleaner UI
+        display_lines = []
+        for line in self.buffer.split('\n'):
+            display_lines.append(line.rstrip(' │╮╯\r'))
+            
+        self.st_placeholder.text('\n'.join(display_lines))
 
     def flush(self):
         pass
