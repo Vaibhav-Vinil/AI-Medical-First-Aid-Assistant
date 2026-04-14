@@ -47,19 +47,19 @@ class StreamCapture(io.StringIO):
     def isatty(self):
         return False
 
-st.title("🚑 AI Medical First Aid Assistant")
-st.markdown(
-    "Enter a medical situation or symptom description in plain English. This assistant will help you:\n"
-    "- Understand and triage the medical issue\n"
-    "- Find applicable first aid protocols\n"
-    "- Verify steps using authoritative sources\n"
-    "- Present a step-by-step action plan"
-)
-
 # 2-Column Layout
 col1, col2 = st.columns([1, 1])
 
 with col1:
+    st.title("🚑 AI Medical First Aid Assistant")
+    st.markdown(
+        "Enter a medical situation or symptom description in plain English. This assistant will help you:\n"
+        "- Understand and triage the medical issue\n"
+        "- Find applicable first aid protocols\n"
+        "- Verify steps using authoritative sources\n"
+        "- Present a step-by-step action plan"
+    )
+
     with st.form("medical_form"):
         user_input = st.text_area("📝 Describe the medical issue:", height=150)
         submitted = st.form_submit_button("🔍 Run First Aid Assistant")
