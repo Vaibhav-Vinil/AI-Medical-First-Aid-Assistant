@@ -37,7 +37,7 @@ def search_medical_research(query: str) -> list[dict]:
 
     response = client.search(
         query=search_query,
-        max_results=10
+        max_results=3
     )
 
     raw_results = response.get("results", [])
