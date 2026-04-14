@@ -1,7 +1,7 @@
 from crewai import Agent, LLM
 
 llm = LLM(
-    model="groq/llama-3.3-70b-versatile",
+    model="groq/llama-3.1-8b-instant",
     temperature=0
 )
 

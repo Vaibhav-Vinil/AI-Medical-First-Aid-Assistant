@@ -1,7 +1,7 @@
 from crewai import Agent, LLM
 from tools.medical_research_tool import search_medical_research
 
-llm = LLM(model="groq/llama-3.3-70b-versatile", temperature=0)
+llm = LLM(model="groq/llama-3.1-8b-instant", temperature=0)
 
 medical_research_agent = Agent(
     role="Medical Research Agent",
