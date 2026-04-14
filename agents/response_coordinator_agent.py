@@ -1,6 +1,6 @@
 from crewai import Agent, LLM
 
-llm = LLM(model="groq/gemma2-9b-it", temperature=0.4)
+llm = LLM(model="groq/llama-3.1-8b-instant", temperature=0.4)
 
 response_coordinator_agent = Agent(
     role="Response Coordinator",

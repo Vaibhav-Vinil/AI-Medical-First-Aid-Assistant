@@ -1,7 +1,7 @@
 from crewai import Agent, LLM
 from tools.medical_search_tool import search_medical_protocols
 
-llm = LLM(model="groq/gemma2-9b-it", temperature=0.3)
+llm = LLM(model="groq/llama-3.1-8b-instant", temperature=0.3)
 
 first_aid_protocol_agent = Agent(
     role="First Aid Protocol Agent",
