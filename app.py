@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 # Suppress HuggingFace module warnings
 os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 warnings.filterwarnings("ignore", message=".*__path__.*")
+warnings.filterwarnings("ignore", message=".*unauthenticated requests.*")
 
 from crew import medical_first_aid_crew
 
