@@ -1,37 +1,62 @@
-# app.py
-
 import streamlit as st
+import sys
+import re
 from dotenv import load_dotenv
-from crew import legal_assistant_crew
+from crew import medical_first_aid_crew
 
 load_dotenv()
 
-st.set_page_config(page_title="AI Legal Assistant", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="AI Medical First Aid Assistant", page_icon="🚑", layout="wide")
 
-st.title("⚖️ Personal AI Legal Assistant")
+class StreamCapture:
+    def __init__(self, st_placeholder):
+        self.st_placeholder = st_placeholder
+        self.buffer = ""
+        # Regex to strip out ANSI terminal color codes so they don't show up as garbage text
+        self.ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+
+    def write(self, text):
+        clean_text = self.ansi_escape.sub('', text)
+        self.buffer += clean_text
+        self.st_placeholder.text(self.buffer)
+
+    def flush(self):
+        pass
+
+st.title("🚑 AI Medical First Aid Assistant")
 st.markdown(
-    "Enter a legal problem in plain English. This assistant will help you:\n"
-    "- Understand the legal issue\n"
-    "- Find applicable IPC sections\n"
-    "- Retrieve matching precedent cases\n"
-    "- Generate a formal legal document"
+    "Enter a medical situation or symptom description in plain English. This assistant will help you:\n"
+    "- Understand and triage the medical issue\n"
+    "- Find applicable first aid protocols\n"
+    "- Verify steps using authoritative sources\n"
+    "- Present a step-by-step action plan"
 )
 
-with st.form("legal_form"):
-    user_input = st.text_area("📝 Describe your legal issue:", height=250)
-    submitted = st.form_submit_button("🔍 Run Legal Assistant")
+with st.form("medical_form"):
+    user_input = st.text_area("📝 Describe the medical issue:", height=150)
+    submitted = st.form_submit_button("🔍 Run First Aid Assistant")
 
 if submitted:
     if not user_input.strip():
-        st.warning("Please enter a legal issue to analyze.")
+        st.warning("Please enter a medical situation to analyze.")
     else:
-        with st.spinner("🔎 Analyzing your case and preparing legal output..."):
-            result = legal_assistant_crew.kickoff(inputs={"user_input": user_input})
+        st.info("🔎 Analyzing the symptoms and retrieving medical protocols... Watch the agents work below!")
+        
+        with st.expander("🤖 Agent Thought Process", expanded=True):
+            log_placeholder = st.empty()
+            
+            # Redirect stdout to our custom stream capture class
+            original_stdout = sys.stdout
+            sys.stdout = StreamCapture(log_placeholder)
+            
+            try:
+                result = medical_first_aid_crew.kickoff(inputs={"user_input": user_input})
+            finally:
+                # Always restore the original stdout so we don't break the terminal
+                sys.stdout = original_stdout
 
-        st.success("✅ Legal Assistant completed the workflow!")
+        st.success("✅ Workflow completed!")
 
         # Display final result
-        st.subheader("📄 Final Output")
-        st.markdown(result if isinstance(result, str) else str(result))
-
-        # Optional: Expand sections if intermediate steps are structured (later enhancement)
+        st.subheader("📄 Action Plan")
+        st.markdown(result.raw if hasattr(result, 'raw') else str(result))

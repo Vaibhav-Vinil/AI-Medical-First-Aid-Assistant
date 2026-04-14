@@ -3,8 +3,11 @@ crewai-tools
 langchain-community
 langchain
 langchain-huggingface
-langchain-chroma
+langchain-pinecone
+pinecone-client
 sentence-transformers
 python-dotenv
 tavily-python
 streamlit
+litellm
+torchvision
