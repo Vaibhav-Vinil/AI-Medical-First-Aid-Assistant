@@ -16,7 +16,9 @@ from crew import medical_first_aid_crew
 
 load_dotenv()
 
-st.set_page_config(page_title="AI Medical First Aid Assistant", page_icon="🚑", layout="wide")
+st.set_page_config(
+    page_title="AI Medical First Aid Assistant", page_icon="🚑", layout="wide"
+)
 
 _SS_PLAN = "first_aid_plan"
 _SS_LOGS = "first_aid_logs"
@@ -132,6 +134,11 @@ with col2:
 
 with col1:
     st.title("🚑 AI Medical First Aid Assistant")
+    st.info(
+        "**Note:** This application is currently running on a free tier AI model. "
+        "If the generation fails or you encounter an error, it is likely due to a temporary rate limit. "
+        "Please wait 20-30 seconds and try again."
+    )
     st.markdown(
         "Enter a medical situation or symptom description in plain English. This assistant will help you:\n"
         "- Understand and triage the medical issue\n"
@@ -162,22 +169,45 @@ with col1:
             capture = StreamCapture(log_placeholder)
             sys.stdout = TeeStdout(console_out, capture)
             try:
-                with st.spinner("Analyzing… running the medical first-aid crew (this may take a minute)."):
-                    result = medical_first_aid_crew.kickoff(inputs={"user_input": user_input})
+                with st.spinner(
+                    "Analyzing… running the medical first-aid crew (this may take a minute)."
+                ):
+                    result = medical_first_aid_crew.kickoff(
+                        inputs={"user_input": user_input}
+                    )
                 plan = result.raw if hasattr(result, "raw") else str(result)
                 st.session_state[_SS_PLAN] = plan
                 st.session_state[_SS_LOGS] = capture.buffer_text
                 st.session_state[_SS_SCROLL] = True
             except Exception as e:
-                st.session_state[_SS_PLAN] = None
-                st.session_state[_SS_LOGS] = capture.buffer_text
-                st.session_state[_SS_ERR] = str(e)
+                error_str = str(e).lower()
+                # Check for rate limit errors
+                if (
+                    "rate limit" in error_str
+                    or "429" in error_str
+                    or "ratelimiterror" in error_str
+                    or "too many requests" in error_str
+                ):
+                    st.session_state[_SS_PLAN] = None
+                    st.session_state[_SS_LOGS] = capture.buffer_text
+                    st.session_state[_SS_ERR] = "rate_limit"
+                else:
+                    # Handle other exceptions
+                    st.session_state[_SS_PLAN] = None
+                    st.session_state[_SS_LOGS] = capture.buffer_text
+                    st.session_state[_SS_ERR] = str(e)
             finally:
                 sys.stdout = prior_stdout
             st.rerun()
 
     if st.session_state[_SS_ERR]:
-        st.error(st.session_state[_SS_ERR])
+        if st.session_state[_SS_ERR] == "rate_limit":
+            st.warning(
+                "The free tier model has reached its temporary rate limit. "
+                "Please wait about 20 seconds and try your request again!"
+            )
+        else:
+            st.error(st.session_state[_SS_ERR])
     if st.session_state[_SS_PLAN]:
         st.markdown(
             '<p id="streamlit-action-plan-anchor" style="margin:0;padding:0;"></p>',
