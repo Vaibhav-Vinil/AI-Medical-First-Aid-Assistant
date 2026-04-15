@@ -1,6 +1,7 @@
 from crewai import Agent
 
 from agents.groq_model import groq_llm
+from agents.step_callback import agent_step_logger
 from tools.medical_search_tool import search_medical_protocols
 
 llm = groq_llm(temperature=0.3)
@@ -17,6 +18,7 @@ first_aid_protocol_agent = Agent(
     ),
     tools=[search_medical_protocols],
     llm=llm,
-    verbose=True,
+    verbose=False,
+    step_callback=agent_step_logger,
     max_rpm=10,
 )

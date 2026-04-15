@@ -1,6 +1,7 @@
 from crewai import Agent
 
 from agents.groq_model import groq_llm
+from agents.step_callback import agent_step_logger
 
 llm = groq_llm(temperature=0.4)
 
@@ -15,6 +16,7 @@ response_coordinator_agent = Agent(
     ),
     tools=[],  # No tools needed; all inputs are from upstream agents
     llm=llm,
-    verbose=True,
+    verbose=False,
+    step_callback=agent_step_logger,
     max_rpm=10,
 )
