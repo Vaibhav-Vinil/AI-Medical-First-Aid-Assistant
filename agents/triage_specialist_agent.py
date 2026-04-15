@@ -1,13 +1,16 @@
-from crewai import Agent, LLM
+from crewai import Agent
 
-llm = LLM(model="groq/llama-3.1-8b-instant", temperature=0)
+from agents.groq_model import groq_llm
+
+llm = groq_llm(temperature=0)
 
 triage_specialist_agent = Agent(
     role="Triage Specialist",
     goal=(
         "Assess the user's reported symptoms or emergency situation. "
-        "IMPORTANT: If the user mentions 'chest pain', 'unconscious', or 'not breathing', "
-        "you must immediately output 'CALL EMERGENCY SERVICES' at the top of your findings."
+        "Begin your answer with the exact line CALL EMERGENCY SERVICES only when the user clearly "
+        "reports chest pain, unconsciousness, not breathing, or an unambiguous equivalent. "
+        "Otherwise never use that line; give a standard triage assessment without it."
     ),
     backstory=(
         "You are a highly trained medical triage specialist. Your job is to swiftly and "
@@ -18,4 +21,5 @@ triage_specialist_agent = Agent(
     llm=llm,
     tools=[],
     verbose=True,
+    max_rpm=10,
 )

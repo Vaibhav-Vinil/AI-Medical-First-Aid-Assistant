@@ -8,6 +8,8 @@ protocol_retrieval_task = Task(
     description=(
         "Using the symptom assessment from the previous task, search the medical "
         "first aid database using your Pinecone tool to query for relevant protocols.\n\n"
+        "Use a single short query string (a few keywords or one brief phrase) per search—"
+        "not long keyword lists or repeated wording.\n\n"
         "Retrieve the top matches that correspond to the triaged condition."
     ),
     expected_output=(

@@ -1,6 +1,8 @@
-from crewai import Agent, LLM
+from crewai import Agent
 
-llm = LLM(model="groq/llama-3.1-8b-instant", temperature=0.4)
+from agents.groq_model import groq_llm
+
+llm = groq_llm(temperature=0.4)
 
 response_coordinator_agent = Agent(
     role="Response Coordinator",
@@ -14,4 +16,5 @@ response_coordinator_agent = Agent(
     tools=[],  # No tools needed; all inputs are from upstream agents
     llm=llm,
     verbose=True,
+    max_rpm=10,
 )

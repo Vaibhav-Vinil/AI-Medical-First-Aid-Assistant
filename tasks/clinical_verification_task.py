@@ -9,7 +9,9 @@ clinical_verification_task = Task(
     description=(
         "You are provided with the initial symptom triage and the retrieved first aid protocols. "
         "Use your web search tool to verify these protocols against authoritative sources "
-        "(Mayo Clinic, Red Cross, CDC) to ensure the information is accurate and safe."
+        "(Mayo Clinic, Red Cross, CDC) to ensure the information is accurate and safe. "
+        "For each tool call, use one short search query (a few words only); do not stuff the query "
+        "with many comma-separated terms or repeated phrases."
     ),
     expected_output=(
         "A verification report confirming the validity of the first aid steps, highlighting any necessary "
